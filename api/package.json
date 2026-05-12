@@ -15,12 +15,12 @@
     "@fastify/cors": "^11.2.0",
     "fastify": "^5.8.5",
     "pg": "^8.20.0",
-    "utilbee": "^1.4.3"
+    "utilbee": "^1.4.5"
   },
   "devDependencies": {
-    "@types/node": "^25.6.0",
+    "@types/node": "^25.7.0",
     "@types/pg": "^8.20.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "imports": {
     "#utils/*": "./src/utils/*",
