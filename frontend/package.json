@@ -11,13 +11,10 @@
     "lint:fix": "eslint --fix ./src"
   },
   "dependencies": {
-    "highlight.js": "^11.11.1",
     "lucide-react": "^1.14.0",
-    "marked-highlight": "^2.2.4",
     "next": "^16.2.6",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
-    "remark-gfm": "^4.0.1",
     "uibee": "^2.16.37",
     "utilbee": "^1.4.5"
   },

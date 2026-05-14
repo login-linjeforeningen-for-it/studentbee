@@ -1,11 +1,8 @@
 'use client'
 
 import { ChangeEvent, RefObject, useEffect, useRef, useState } from 'react'
-import { marked } from 'marked'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/github-dark.css'
+import { MarkdownRender } from 'uibee/components'
 import { sendText } from '@parent/src/utils/fetchClient'
-import './editor.css'
 
 type EditorProps = {
     courseId: string
@@ -42,27 +39,6 @@ type MarkdownProps = {
     className?: string
 }
 
-marked.use({
-    renderer: {
-        code(token) {
-            const lang = token.lang
-            const language = hljs.getLanguage(typeof lang === 'string' ? lang : 'plaintext') ? lang || 'plaintext' : 'plaintext'
-            return `<pre class='inline-block rounded-lg overflow-auto whitespace-pre-wrap wrap-break-word'>
-                <code class='hljs ${language}'>${hljs.highlight(token.text, { language }).value}</code></pre>`
-        },
-        image(token) {
-            const width = 'width="300"'
-            return `<img src='${token.href}' alt='${token.title}' ${width} />`
-        },
-        link(token) {
-            return `<a href='${token.href}' title='${token.title}' target='_blank' rel='noopener noreferrer' 
-            class='text-blue-500 underline'>${token.text}</a>`
-        },
-        codespan(token) {
-            return `<code class='break-all bg-login-500 p-0.3 rounded-xs'>${token.text}</code>`
-        }
-    }
-})
 
 export default function Editor({
     courseId,
@@ -215,10 +191,10 @@ export function Markdown({
 }: MarkdownProps) {
     return (
         <div
-            className={`markdown-preview
-                ${displayEditor && 'pl-2 border-l-2 border-login'} text-foreground h-full wrap-break-word ${className}`}
+            className={`${displayEditor && 'pl-2 border-l-2 border-login'} text-foreground h-full wrap-break-word ${className}`}
             onClick={handleDisplayEditor}
-            dangerouslySetInnerHTML={{ __html: marked(markdown) }}
-        />
+        >
+            <MarkdownRender MDstr={markdown} />
+        </div>
     )
 }
