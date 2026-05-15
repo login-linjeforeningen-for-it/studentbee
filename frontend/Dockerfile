@@ -14,7 +14,7 @@ COPY frontend/default.vcl /etc/varnish/default.vcl
 COPY frontend/entrypoint.sh ./entrypoint.sh
 
 # Copies package versions
-COPY frontend/package.json frontend/bun.lock ./
+COPY frontend/package.json frontend/bun.lock frontend/bunfig.toml ./
 
 # Installs dependencies
 RUN bun install --frozen-lockfile

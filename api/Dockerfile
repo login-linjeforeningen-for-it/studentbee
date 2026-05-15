@@ -5,7 +5,7 @@ FROM oven/bun:alpine
 WORKDIR /usr/src/app
 
 # Copies package.json and package-lock.json to the Docker environment
-COPY package.json bun.lock ./
+COPY package.json bun.lock bunfig.toml ./
 
 # Installs required dependencies
 RUN bun install --frozen-lockfile
