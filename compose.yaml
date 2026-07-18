@@ -39,7 +39,7 @@ services:
             studentbee_database:
                 condition: service_healthy
         healthcheck:
-            test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ping || exit 1"]
+            test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/api/ping || exit 1"]
             interval: 30s
             timeout: 5s
             start_period: 10s
