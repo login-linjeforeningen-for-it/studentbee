@@ -47,7 +47,7 @@ async function userHandler({ id, email, name }: UpdateUserProps) {
     `, [id, email, name])
 
     if (!result.rowCount) {
-        console.error(`Error when inserting updating user in authMiddleware`)
+        console.error('Error when inserting updating user in authMiddleware')
         console.log(`Values: id: ${id}, email: ${email}, name: ${name}`)
         console.log(`Details: ${result}`)
     }

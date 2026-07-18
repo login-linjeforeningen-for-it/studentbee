@@ -9,7 +9,7 @@ import run from '#db'
  */
 export default async function deleteFile(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
-        const { id } = req.params as { id : string }
+        const { id } = req.params as { id: string }
         if (!id) {
             return res.status(400).send({ error: 'id is required' })
         }

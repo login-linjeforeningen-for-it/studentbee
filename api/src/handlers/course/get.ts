@@ -41,7 +41,9 @@ export default async function courseHandler(req: FastifyRequest, res: FastifyRep
                         'updatedBy', cards.updated_by,
                         'updatedAt', cards.updated_at,
                         'vote', (SELECT cv2.is_upvote FROM card_votes cv2 WHERE cv2.card_id = cards.id AND cv2.user_id = $2),
-                        'rating', COALESCE((SELECT SUM(CASE WHEN cv2.is_upvote THEN 1 ELSE -1 END) FROM card_votes cv2 WHERE cv2.card_id = cards.id), 0)
+                        'rating', COALESCE(
+                            (SELECT SUM(CASE WHEN cv2.is_upvote THEN 1 ELSE -1 END)
+                             FROM card_votes cv2 WHERE cv2.card_id = cards.id), 0)
                     )
                 ) FILTER (WHERE cards.id IS NOT NULL), '[]') as cards,
                 COALESCE(json_agg(

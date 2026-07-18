@@ -32,7 +32,7 @@ export default async function postCourse(req: FastifyRequest, res: FastifyReply)
         }
 
         const id = courseResponse.rows[0].id
-            await run(`
+        await run(`
                 INSERT INTO files (name, content, course_id, created_by, updated_by)
             VALUES ('root', '', $1, $2, $2)    
             ON CONFLICT (name, course_id, parent) DO NOTHING

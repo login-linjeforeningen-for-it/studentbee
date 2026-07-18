@@ -5,7 +5,10 @@
   "type": "module",
   "scripts": {
     "start": "bun src/index.ts",
-    "debug": "bun --inspect --trace-deprecation src/index.ts"
+    "debug": "bun --inspect --trace-deprecation src/index.ts",
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
   "author": "Login - Linjeforeningen for IT - TekKom",
@@ -18,9 +21,13 @@
     "utilbee": "^1.4.7"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@types/bun": "^1.3.14",
     "@types/pg": "^8.20.0",
-    "typescript": "^6.0.3"
+    "eslint": "^10.5.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.61.1"
   },
   "imports": {
     "#utils/*": "./src/utils/*",

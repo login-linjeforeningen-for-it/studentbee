@@ -11,5 +11,6 @@ echo "SERVING CACHED PROJECT ON http://localhost:3000."
 echo ""
 echo "-------------------- NOTE --------------------"
 
-# Starts API
-PORT=3001 bun server.js
+# Starts Next.js — exec replaces sh as PID 1 so SIGTERM reaches bun directly
+export PORT=3001
+exec bun server.js

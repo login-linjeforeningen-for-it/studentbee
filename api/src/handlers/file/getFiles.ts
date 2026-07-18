@@ -23,7 +23,7 @@ export default async function filesHandler(req: FastifyRequest, res: FastifyRepl
 
     try {
         const { rows } = await run(
-            `SELECT * FROM files WHERE course_id = $1 AND deleted = false ORDER BY created_at ASC`,
+            'SELECT * FROM files WHERE course_id = $1 AND deleted = false ORDER BY created_at ASC',
             [id]
         )
 

@@ -3,7 +3,15 @@ import { runInTransaction } from '#db'
 
 export default async function putCourse(req: FastifyRequest, res: FastifyReply): Promise<void> {
     const { id } = req.params as { id: string } ?? {}
-    const { cards, notes } = req.body as { cards: any[]; notes: string } ?? {}
+    type Card = {
+        question: string
+        alternatives: string[]
+        answers: string[]
+        theme?: string | null
+        source?: string | null
+        help?: string | null
+    }
+    const { cards, notes } = req.body as { cards: Card[]; notes: string } ?? {}
 
     try {
 
@@ -63,7 +71,7 @@ export default async function putCourse(req: FastifyRequest, res: FastifyReply):
             }
 
             if (Array.isArray(cards)) {
-                await client.query(`DELETE FROM cards WHERE course_id = $1`, [id])
+                await client.query('DELETE FROM cards WHERE course_id = $1', [id])
 
                 for (const card of cards) {
                     const { question, alternatives, answers, theme, source, help } = card

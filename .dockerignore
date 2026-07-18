@@ -1,8 +1,9 @@
-Dockerfile
+frontend/Dockerfile
 .dockerignore
 .git
 .gitignore
 node_modules
+.next
 .env
 .env.*
 dist
@@ -10,3 +11,4 @@ dist
 coverage
 *.md
 npm-debug.log*
+api

@@ -12,6 +12,7 @@ ENV NEXT_PUBLIC_BROWSER_API_URL=${NEXT_PUBLIC_BROWSER_API_URL}
 
 COPY frontend .
 
+RUN bun run lint
 RUN bun run build
 
 # Runtime

@@ -15,7 +15,7 @@ export default async function putUserTime(req: FastifyRequest, res: FastifyReply
         const userId = req.user!.id
 
         const lastUpdateResult = await run(
-            `SELECT last_time_update FROM users WHERE user_id = $1`,
+            'SELECT last_time_update FROM users WHERE user_id = $1',
             [userId]
         )
         if (lastUpdateResult.rowCount === 0) {

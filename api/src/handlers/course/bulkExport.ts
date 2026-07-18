@@ -1,12 +1,25 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 
-/**
- * Exports the full content of the database as json
- * @param req Request object
- * @param res Response object
- * @returns The full database as json
- */
+type ExportedComment = {
+    id: number
+    parent_id: number | null
+    content: string
+    votes: { up: number; down: number }
+    rating: number
+}
+
+type ExportedCard = {
+    id: number
+    question: string
+    alternatives: string[]
+    correct: string[]
+    theme: string | null
+    source: string | null
+    votes: { up: number; down: number }
+    rating: number
+    comments: ExportedComment[]
+}
 
 export default async function bulkExport(_: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
@@ -53,7 +66,7 @@ export default async function bulkExport(_: FastifyRequest, res: FastifyReply): 
 
         const comments = commentsResult.rows
 
-        const commentsByCard = new Map<number, any[]>()
+        const commentsByCard = new Map<number, ExportedComment[]>()
 
         for (const comment of comments) {
             if (!commentsByCard.has(comment.card_id)) {
@@ -72,7 +85,7 @@ export default async function bulkExport(_: FastifyRequest, res: FastifyReply): 
             })
         }
 
-        const cardsByCourse = new Map<number, any[]>()
+        const cardsByCourse = new Map<number, ExportedCard[]>()
 
         for (const card of cards) {
             const exportedCard = {

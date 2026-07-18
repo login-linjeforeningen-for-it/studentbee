@@ -7,8 +7,9 @@
     "dev": "bun --bun next dev --turbopack",
     "build": "bun --bun next build",
     "start": "PORT=3001 bun --bun next start",
-    "lint": "tsc --noEmit && eslint ./src",
-    "lint:fix": "eslint --fix ./src"
+    "lint": "eslint ./src",
+    "lint:fix": "eslint --fix ./src",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "lucide-react": "^1.21.0",

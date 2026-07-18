@@ -1,10 +1,24 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 
+type ImportCard = {
+    question: string
+    alternatives: string[]
+    correct: string[]
+    theme?: string
+    source?: string
+}
+
+type ImportCourse = {
+    id: string
+    text?: string
+    cards: ImportCard[]
+}
+
 export default async function bulkImport(req: FastifyRequest, res: FastifyReply): Promise<void> {
     try {
-        const courses = req.body as any[]
-        const userId = (req as any).user?.id ?? null
+        const courses = req.body as ImportCourse[]
+        const userId = req.user?.id ?? null
 
         if (!Array.isArray(courses)) {
             return res.status(400).send({ error: 'Body must be an array of courses' })
@@ -67,7 +81,7 @@ export default async function bulkImport(req: FastifyRequest, res: FastifyReply)
                         !Array.isArray(card.alternatives) ||
                         !Array.isArray(card.correct)
                     ) {
-                        throw new Error(`Invalid card structure`)
+                        throw new Error('Invalid card structure')
                     }
 
                     const cardResult = await run(`

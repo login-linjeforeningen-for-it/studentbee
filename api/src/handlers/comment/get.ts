@@ -1,8 +1,22 @@
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import run from '#db'
 
+type CommentRow = {
+    id: number
+    cardId: number
+    parentId: number | null
+    content: string
+    createdAt: string
+    updatedAt: string
+    username: string
+    rating: number
+    vote: boolean | null
+}
+
+type Comment = CommentRow & { parent: number | null; replies: Comment[] }
+
 export default async function commentsHandler(req: FastifyRequest, res: FastifyReply) {
-    const { cardId } = req.params as { cardId : string }
+    const { cardId } = req.params as { cardId: string }
     const userId = req.user?.id ?? null
 
     try {
@@ -24,9 +38,9 @@ export default async function commentsHandler(req: FastifyRequest, res: FastifyR
             ORDER BY c.created_at ASC;
         `, [cardId, userId])
 
-        const rows = result.rows
-        const commentById: Record<number, any> = {}
-        rows.forEach((row: any) => {
+        const rows = result.rows as CommentRow[]
+        const commentById: Record<number, Comment> = {}
+        rows.forEach((row: CommentRow) => {
             commentById[row.id] = {
                 ...row,
                 parent: row.parentId ?? null,
@@ -34,8 +48,8 @@ export default async function commentsHandler(req: FastifyRequest, res: FastifyR
             }
         })
 
-        const comments: any[] = []
-        rows.forEach((row: any) => {
+        const comments: Comment[] = []
+        rows.forEach((row: CommentRow) => {
             const comment = commentById[row.id]
 
             if (row.parentId) {
