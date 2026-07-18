@@ -4,6 +4,7 @@ import { envLoad } from 'utilbee'
 envLoad({ path: '../.env' })
 
 const nextConfig: NextConfig = {
+    output: 'standalone',
     async headers() {
         return [
             {

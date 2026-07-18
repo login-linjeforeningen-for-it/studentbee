@@ -1,0 +1,71 @@
+services:
+    studentbee:
+        container_name: studentbee
+        image: studentbee
+        build:
+            context: .
+            dockerfile: ./frontend/Dockerfile
+            args:
+                NEXT_PUBLIC_BROWSER_API_URL: ${NEXT_PUBLIC_BROWSER_API_URL:-https://studentbee-api.login.no/api}
+        restart: always
+        ports:
+            - "8400:3000"
+        env_file:
+            - .env
+        healthcheck:
+            test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/ || exit 1"]
+            interval: 30s
+            timeout: 5s
+            start_period: 15s
+            retries: 3
+        depends_on:
+            studentbee_api:
+                condition: service_healthy
+        mem_limit: 1g
+        cpus: "2.0"
+
+    studentbee_api:
+        container_name: studentbee_api
+        image: studentbee_api
+        build:
+            context: ./api
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+            - "8401:8080"
+        env_file:
+            - .env
+        depends_on:
+            studentbee_database:
+                condition: service_healthy
+        healthcheck:
+            test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/ping || exit 1"]
+            interval: 30s
+            timeout: 5s
+            start_period: 10s
+            retries: 3
+        mem_limit: 1g
+        cpus: "2.0"
+
+    studentbee_database:
+        image: postgres:18-alpine
+        container_name: studentbee_database
+        restart: always
+        env_file:
+            - .env
+        environment:
+            POSTGRES_USER: ${DB_USER:-studentbee}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB:-studentbee}
+        volumes:
+            - postgres_data:/var/lib/postgresql
+            - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U studentbee -d studentbee"]
+            interval: 10s
+            retries: 5
+        mem_limit: 1g
+        cpus: "2.0"
+
+volumes:
+    postgres_data:

@@ -1,33 +1,39 @@
-# Latest bun base image
-FROM oven/bun:alpine
-
-# Installs dependencies
-RUN apk add --no-cache python3 make g++ varnish
-
-# Container working directory
+# Builder
+FROM oven/bun:alpine AS builder
 WORKDIR /app
 
-# Starts varnish
-COPY frontend/default.vcl /etc/varnish/default.vcl
+RUN apk add --no-cache python3 make g++
 
-# Copies entrypoint
-COPY frontend/entrypoint.sh ./entrypoint.sh
-
-# Copies package versions
 COPY frontend/package.json frontend/bun.lock frontend/bunfig.toml ./
-
-# Installs dependencies
 RUN bun install --frozen-lockfile
 
-# Copies source code
-COPY frontend .
-COPY .env .env
+ARG NEXT_PUBLIC_BROWSER_API_URL
+ENV NEXT_PUBLIC_BROWSER_API_URL=${NEXT_PUBLIC_BROWSER_API_URL}
 
-# Builds the application
+COPY frontend .
+
 RUN bun run build
 
-# Exposes port 3000
+# Runtime
+FROM oven/bun:alpine
+WORKDIR /app
+
+RUN apk add --no-cache varnish \
+    && addgroup -S app && adduser -S app -G app
+
+COPY --from=builder --chown=app:app /app/.next/standalone ./
+COPY --from=builder --chown=app:app /app/.next/static ./.next/static
+COPY --from=builder --chown=app:app /app/public ./public
+
+COPY frontend/default.vcl /etc/varnish/default.vcl
+COPY frontend/entrypoint.sh ./entrypoint.sh
+
+RUN chown app:app /etc/varnish \
+    && chown app:app /var/lib/varnish \
+    && chmod +x ./entrypoint.sh
+
+USER app
+
 EXPOSE 3000
 
-# Starts the application
 CMD ["/bin/sh", "/app/entrypoint.sh"]
