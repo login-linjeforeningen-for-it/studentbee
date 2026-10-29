@@ -1,0 +1,15 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    uses: login-linjeforeningen-for-it/.github/.github/workflows/build-image.yml@main
+    with:
+      build-args: |
+        NEXT_PUBLIC_BROWSER_API_URL=https://studentbee-api.login.no
+    permissions:
+      contents: read
+      packages: write

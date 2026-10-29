@@ -3,8 +3,8 @@ services:
         container_name: studentbee
         image: studentbee
         build:
-            context: .
-            dockerfile: ./frontend/Dockerfile
+            context: ./frontend
+            dockerfile: Dockerfile
             args:
                 NEXT_PUBLIC_BROWSER_API_URL: ${NEXT_PUBLIC_BROWSER_API_URL:-https://studentbee-api.login.no/api}
         restart: always
